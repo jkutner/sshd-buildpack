@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ "$SSH_ENABLED" == "true" ]]; then
+if [[ "${SSH_DISABLED:-}" != "true" ]]; then
   ssh_layer=$(realpath $(dirname ${BASH_SOURCE[0]})/..)
-  ssh_dir=/workspace/.ssh
+  ssh_dir=$(realpath $HOME/.ssh)
 
   mkdir -p $ssh_dir
   cat $ssh_layer/id_rsa.pub >> $ssh_dir/authorized_keys

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -eu
+
+layers_dir="$1"
+env_dir="$2/env"
+plan_path="$3"
+
+if compgen -G "${env_dir}/*" > /dev/null; then
+  for var in ${env_dir}/*; do
+    declare "$(basename ${var})=$(<${var})"
+  done
+fi
+
+echo "[ssh]"
+ssh_layer=$layers_dir/config
+mkdir -p $ssh_layer/profile.d
+
+
+if [ ! -f ${ssh_layer}/id_rsa.pub ]; then
+  echo "Generating server key"
+  ssh-keygen -f $ssh_layer/id_rsa -t rsa -N ''
+fi
+
+echo "Creating sshd startup script"
+cp ${CNB_BUILDPACK_DIR}/sbin/sshd.sh $ssh_layer/profile.d/sshd.sh
+
+cat <<TOML > $ssh_layer.toml
+launch = true
+cache = true
+TOML
+
+cat <<TOML > ${layers_dir}/launch.toml
+[[processes]]
+type = "bash"
+command = "/bin/bash"
+TOML

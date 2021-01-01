@@ -1,0 +1,17 @@
+api = "0.4"
+
+[buildpack]
+id = "jkutner/sshd"
+version = "0.1.0"
+name = "SSH Server Buildpack"
+homepage = "https://github.com/jkutner/sshd-buildpack"
+description = "Configures and run sshd in the container"
+
+[[stacks]]
+id = "io.buildpacks.stacks.bionic"
+
+[[stacks]]
+id = "heroku-18"
+
+[[stacks]]
+id = "heroku-20"

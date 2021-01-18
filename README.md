@@ -1,6 +1,6 @@
 # SSH Server Buildpack
 
-![Version](https://img.shields.io/badge/dynamic/json?url=https://cnb-registry-api.herokuapp.com/api/v1/buildpacks/jkutner/ngrok&label=Version&query=$.latest.version)
+![Version](https://img.shields.io/badge/dynamic/json?url=https://cnb-registry-api.herokuapp.com/api/v1/buildpacks/jkutner/sshd&label=Version&query=$.latest.version)
 
 This is a [Cloud Native Buildpack](https://buildpacks.io) that configures and runs `sshd` inside of a container.
 

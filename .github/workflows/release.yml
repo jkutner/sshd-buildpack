@@ -20,27 +20,26 @@ jobs:
                 username: ${{ github.repository_owner }}
                 password: ${{ secrets.GHCR_TOKEN }}
             - id: setup-pack
-              name: Package Buildpack
-              uses: buildpacks/github-actions/setup-pack@v4.0.0
+              uses: buildpacks/github-actions/setup-pack@v4.1.0
             - id: package
               run: |
                 #!/usr/bin/env bash
                 set -euo pipefail
-
+                BP_ID="$(cat buildpack.toml | yj -t | jq -r .buildpack.id)"
                 VERSION="$(cat buildpack.toml | yj -t | jq -r .buildpack.version)"
+                PACKAGE="${REPO}/$(echo "$BP_ID" | sed 's/\//_/g')"
                 pack package-buildpack --publish ${PACKAGE}:${VERSION}
                 DIGEST="$(crane digest ${PACKAGE}:${VERSION})"
-
+                echo "::set-output name=bp_id::$BP_ID"
                 echo "::set-output name=version::$VERSION"
                 echo "::set-output name=address::${PACKAGE}@${DIGEST}"
               shell: bash
               env:
-                PACKAGE: ghcr.io/${{ github.repository_owner }}/buildpacks/jkutner_sshd
+                REPO: ghcr.io/${{ github.repository_owner }}/buildpacks/jkutner_sshd
             - id: register
-              name: Register Buildpack
-              uses: docker://ghcr.io/buildpacks/actions/registry/request-add-entry:4.0.0
+              uses: docker://ghcr.io/buildpacks/actions/registry/request-add-entry:4.1.0
               with:
                 token:   ${{ secrets.PUBLIC_REPO_TOKEN }}
-                id:      jkutner/sshd
+                id:      ${{ steps.package.outputs.bp_id }}
                 version: ${{ steps.package.outputs.version }}
                 address: ${{ steps.package.outputs.address }}

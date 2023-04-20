@@ -19,6 +19,8 @@ jobs:
                 registry: ghcr.io
                 username: ${{ github.repository_owner }}
                 password: ${{ secrets.GHCR_TOKEN }}
+            - id: setup-tools
+              uses: buildpacks/github-actions/setup-tools@v5.1.0
             - id: setup-pack
               uses: buildpacks/github-actions/setup-pack@v5.1.0
             - id: package
@@ -30,9 +32,9 @@ jobs:
                 PACKAGE="${REPO}/$(echo "$BP_ID" | sed 's/\//_/g')"
                 pack buildpack package --publish ${PACKAGE}:${VERSION}
                 DIGEST="$(crane digest ${PACKAGE}:${VERSION})"
-                echo "::set-output name=bp_id::$BP_ID"
-                echo "::set-output name=version::$VERSION"
-                echo "::set-output name=address::${PACKAGE}@${DIGEST}"
+                echo "bp_id=$BP_ID" >> "$GITHUB_OUTPUT"
+                echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+                echo "address=${PACKAGE}@${DIGEST}" >> "$GITHUB_OUTPUT"
               shell: bash
               env:
                 REPO: ghcr.io/${{ github.repository_owner }}/buildpacks

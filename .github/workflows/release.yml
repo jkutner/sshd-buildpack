@@ -20,7 +20,7 @@ jobs:
                 username: ${{ github.repository_owner }}
                 password: ${{ secrets.GHCR_TOKEN }}
             - id: setup-pack
-              uses: buildpacks/github-actions/setup-pack@v4.1.0
+              uses: buildpacks/github-actions/setup-pack@v5.1.0
             - id: package
               run: |
                 #!/usr/bin/env bash
@@ -28,7 +28,7 @@ jobs:
                 BP_ID="$(cat buildpack.toml | yj -t | jq -r .buildpack.id)"
                 VERSION="$(cat buildpack.toml | yj -t | jq -r .buildpack.version)"
                 PACKAGE="${REPO}/$(echo "$BP_ID" | sed 's/\//_/g')"
-                pack package-buildpack --publish ${PACKAGE}:${VERSION}
+                pack buildpack package --publish ${PACKAGE}:${VERSION}
                 DIGEST="$(crane digest ${PACKAGE}:${VERSION})"
                 echo "::set-output name=bp_id::$BP_ID"
                 echo "::set-output name=version::$VERSION"

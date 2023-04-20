@@ -2,7 +2,7 @@ api = "0.4"
 
 [buildpack]
 id = "jkutner/sshd"
-version = "0.1.1"
+version = "0.2.0"
 name = "SSH Server Buildpack"
 homepage = "https://github.com/jkutner/sshd-buildpack"
 description = "Configures and run sshd in the container"

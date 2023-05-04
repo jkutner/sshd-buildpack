@@ -4,10 +4,10 @@ ssh_port=${SSH_PORT:-"2222"}
 
 if [[ "${SSH_DISABLED:-}" != "true" ]] && ! lsof -Pi :$ssh_port -sTCP:LISTEN -t >/dev/null; then
   ssh_layer=$(realpath $(dirname ${BASH_SOURCE[0]})/..)
-  ssh_dir=$(realpath $HOME/.ssh)
+  ssh_dir=$(realpath /workspace/.ssh)
 
   # ssh requires read-only for group
-  chmod go-w /$HOME
+  chmod go-w /workspace
 
   mkdir -p $ssh_dir
   cat $ssh_layer/id_rsa.pub >> $ssh_dir/authorized_keys

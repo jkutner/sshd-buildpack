@@ -14,7 +14,7 @@ fi
 
 echo "[ssh]"
 ssh_layer=$layers_dir/config
-mkdir -p $ssh_layer/profile.d
+mkdir -p $ssh_layer/exec.d
 
 
 if [ ! -f ${ssh_layer}/id_rsa.pub ]; then
@@ -23,9 +23,10 @@ if [ ! -f ${ssh_layer}/id_rsa.pub ]; then
 fi
 
 echo "Creating sshd startup script"
-cp ${CNB_BUILDPACK_DIR}/sbin/sshd.sh $ssh_layer/profile.d/sshd.sh
+cp ${CNB_BUILDPACK_DIR}/sbin/sshd.sh $ssh_layer/exec.d/sshd.sh
 
 cat <<TOML > $ssh_layer.toml
+[types]
 launch = true
 cache = true
 TOML
@@ -33,5 +34,5 @@ TOML
 cat <<TOML > ${layers_dir}/launch.toml
 [[processes]]
 type = "bash"
-command = "/bin/bash"
+command = ["/bin/bash"]
 TOML
